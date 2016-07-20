@@ -17,7 +17,7 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <RootNamespace>ProtoDrawingCollector.csproj</RootNamespace>
-    <AssemblyName>ProtoDrawingCollector</AssemblyName>
+    <AssemblyName>DrawingCollector</AssemblyName>
     <ProjectGuid>{553B79D6-0AB0-4E7C-9F6C-D54A289F1331}</ProjectGuid>
   </PropertyGroup>
   <!-- This section defines properties that are set when the "Debug" configuration is
@@ -138,6 +138,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

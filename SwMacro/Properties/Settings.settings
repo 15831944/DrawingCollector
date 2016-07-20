@@ -27,8 +27,14 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Server=AMSTORE-SQL-05;Database=ENGINEERING;Trusted_Connection=True;</Value>
     </Setting>
-    <Setting Name="PageNoLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">10, 10</Value>
+    <Setting Name="Suffix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-PACKET</Value>
+    </Setting>
+    <Setting Name="PageStampLoc" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">1178, 20</Value>
+    </Setting>
+    <Setting Name="PageStampSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
     </Setting>
   </Settings>
 </SettingsFile>

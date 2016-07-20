@@ -7,6 +7,8 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Runtime.InteropServices;
 
+using BuildPDF.csproj;
+
 class PDFCollector {
   private List<FileInfo> lfi = new List<FileInfo>();
   private List<KeyValuePair<string, string>> nf = new List<KeyValuePair<string, string>>();
@@ -37,21 +39,22 @@ class PDFCollector {
 
   public void Collect() {
     string fullpath = (SwApp.ActiveDoc as ModelDoc2).GetPathName();
-    FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
-    lfi.Add(top_level);
-    
-    collect_drwgs((ModelDoc2)SwApp.ActiveDoc);
-    OnDone(EventArgs.Empty);
-  }
-
-  private void collect_drwgs(ModelDoc2 md) {
     SWTableType swt = null;
-    string title = md.GetTitle();
+    ModelDoc2 md = (ModelDoc2)SwApp.ActiveDoc;
     try {
       swt = new SWTableType(md, Hashes);
     } catch (Exception e) {
       System.Diagnostics.Debug.WriteLine(e.Message);
     }
+    create_pdf(new FileInfo(fullpath));
+    FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
+    lfi.Add(top_level);
+    collect_drwgs(md, swt);
+    OnDone(EventArgs.Empty);
+  }
+
+  private void collect_drwgs(ModelDoc2 md, SWTableType swt) {
+    string title = md.GetTitle();
 
     List<FileInfo> ss = new List<FileInfo>();
     if (swt != null) {
@@ -59,25 +62,40 @@ class PDFCollector {
       bool in_lfi;
       bool in_nf;
       for (int i = 1; i < swt.RowCount; i++) {
-        System.Diagnostics.Debug.WriteLine("table: " + swt.GetProperty(i, "PART"));
-        part = swt.GetProperty(i, "PART");
-        //if (!part.StartsWith("0")) {
-        FileInfo fi = swt.get_path(part);
+        System.Diagnostics.Debug.WriteLine("table: " + swt.GetProperty(i, swt.PartColumn));
+        part = swt.GetProperty(i, swt.PartColumn);
+        //if (!part.StartsWith("0")) {        
+        FileInfo partpath = swt.get_path(part);
+        string t = string.Empty;
+        try {
+          t = partpath.FullName.ToUpper();
+        } catch (NullReferenceException) {
+          // it's OK
+        }
+        string ext = Path.GetExtension(t).ToUpper();
+        if (t.Length < 1) continue;
+        FileInfo dwg = new FileInfo(t.Replace(ext, ".SLDDRW"));
+        FileInfo fi = new FileInfo(t.Replace(ext, ".PDF"));
+        if (dwg.Exists && !fi.Exists) {
+          create_pdf(dwg);
+          fi = new FileInfo(fi.FullName);
+          SwApp.CloseDoc(dwg.FullName);
+        }
         in_lfi = is_in(part, lfi);
         in_nf = is_in(part, nf);
-        if (fi != null) {
-          if (!in_lfi) {
+        if (dwg != null) {
+          if (!in_lfi && fi.Exists) {
             ss.Add(fi);
-            OnAppend(new AppendEventArgs(fi.ToString()));
+            OnAppend(new AppendEventArgs(string.Format("Added {0}", fi.Name)));
           } else {
-            break;
+            continue;
           }
         } else {
           if (!in_nf) {
             nf.Add(new KeyValuePair<string, string>(part, title));
-            OnAppend(new AppendEventArgs(part + " NOT found"));
+            OnAppend(new AppendEventArgs(string.Format("{0} NOT found", part)));
           } else {
-            break;
+            continue;
           }
         }
         //} else {
@@ -104,6 +122,67 @@ class PDFCollector {
     //    }
     //  }
     //}
+  }
+
+  private string find_part_column(SWTableType swt) {
+    foreach (string s in swt.Columns) {
+      if (s.ToUpper().Contains("PART")) {
+        return s;
+      }
+    }
+    return "PART NUMBER";
+  }
+
+  private void create_pdf(FileInfo p) {
+    OnAppend(new AppendEventArgs(string.Format("Creating {0}...", p.Name)));
+    int dt = (int)SolidWorks.Interop.swconst.swDocumentTypes_e.swDocDRAWING;
+    int odo = (int)SolidWorks.Interop.swconst.swOpenDocOptions_e.swOpenDocOptions_Silent;
+    int err = 0;
+    int warn = 0;
+    SwApp.OpenDocSilent(p.FullName, dt, ref odo);
+    SwApp.ActivateDoc3(p.FullName,
+      true,
+      (int)SolidWorks.Interop.swconst.swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
+    string newName = p.Name.Replace(".SLDDRW", ".PDF");
+    string tmpFile = string.Format(@"{0}\{1}", Path.GetTempPath(), newName);
+    string fileName = p.FullName.Replace(".SLDDRW", ".PDF");
+    int saveVersion = (int)swSaveAsVersion_e.swSaveAsCurrentVersion;
+    int saveOptions = (int)swSaveAsOptions_e.swSaveAsOptions_Silent;
+    bool success;
+    success = (SwApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile, saveVersion, saveOptions, ref err, ref warn);
+    try {
+      File.Copy(tmpFile, fileName, true);
+    } catch (UnauthorizedAccessException uae) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("You don't have the reqired permission to access '{0}'.", fileName),
+          uae);
+    } catch (ArgumentException ae) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("Either '{0}' or '{1}' is not a proper file name.", tmpFile, fileName),
+          ae);
+    } catch (PathTooLongException ptle) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("Source='{0}'; Dest='{1}' <= One of these is too long.", tmpFile, fileName),
+          ptle);
+    } catch (DirectoryNotFoundException dnfe) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("Source='{0}'; Dest='{1}' <= One of these is invalid.", tmpFile, fileName),
+          dnfe);
+    } catch (FileNotFoundException fnfe) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("Crap! I lost '{0}'!", tmpFile),
+          fnfe);
+    } catch (IOException) {
+      System.Windows.Forms.MessageBox.Show(
+          String.Format("If you have the file, '{0}', selected in an Explorer window, " +
+          "you may have to close it.", fileName), "This file is open somewhere.",
+          System.Windows.Forms.MessageBoxButtons.OK,
+          System.Windows.Forms.MessageBoxIcon.Error);
+    } catch (NotSupportedException nse) {
+      throw new Exceptions.BuildPDFException(
+          String.Format("Source='{0}'; Dest='{1}' <= One of these is an invalid format.",
+          tmpFile, fileName), nse);
+    }
   }
 
   

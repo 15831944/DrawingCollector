@@ -22,13 +22,24 @@ class PDFMerger {
     }
   }
 
+  public static int count_pages(List<FileInfo> docs) {
+    int total = 0;
+    foreach (FileInfo fi in docs) {
+      PdfReader reader = new PdfReader(fi.FullName);
+      total += reader.NumberOfPages;
+    }
+    return total;
+  }
+
   public static byte[] merge_files(List<FileInfo> docs) {
     Document document = new Document();
     using (MemoryStream ms = new MemoryStream()) {
       PdfCopy copy = new PdfCopy(document, ms);
       document.Open();
       int document_page_counter = 0;
-
+      int total_pages = count_pages(docs);
+      System.Drawing.Point location = ProtoDrawingCollector.csproj.Properties.Settings.Default.PageStampLoc;
+      int font_size = ProtoDrawingCollector.csproj.Properties.Settings.Default.PageStampSize;
       foreach (FileInfo fi in docs) {
         PdfReader reader = new PdfReader(fi.FullName);
 
@@ -37,10 +48,12 @@ class PDFMerger {
           PdfImportedPage ip = copy.GetImportedPage(reader, i);
 #if PAGE_NUMBERS
           PdfCopy.PageStamp ps = copy.CreatePageStamp(ip);
-          System.Drawing.Point location = ProtoDrawingCollector.csproj.Properties.Settings.Default.PageNoLocation;
+          Font f = FontFactory.GetFont("Century Gothic", font_size);
+          Chunk c = new Chunk(string.Format("{0} OF {1}", document_page_counter, total_pages), f);
+          c.SetBackground(new BaseColor(255, 255, 255));
           ColumnText.ShowTextAligned(ps.GetOverContent(),
             Element.ALIGN_CENTER,
-            new Phrase(string.Format("{0} OF {1}", document_page_counter, reader.NumberOfPages)),
+            new Phrase(c),
             location.X, location.Y, 
             ip.Width < ip.Height ? 0 : 1);
           ps.AlterContents();

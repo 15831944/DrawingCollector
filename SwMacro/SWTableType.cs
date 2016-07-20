@@ -18,7 +18,7 @@ class SWTableType {
   private System.Collections.Specialized.StringCollection _masterHashes;
   private string _part_column = "PART NUMBER";
   private bool initialated = false;
-  private List<FileInfo> path_list;
+  private List<FileInfo> path_list = new List<FileInfo>();
 
   public SWTableType(ModelDoc2 md, string tablehash) {
     _masterHash = tablehash;
@@ -59,13 +59,21 @@ class SWTableType {
     }
   }
 
+  public SWTableType(ModelDoc2 md, System.Collections.Specialized.StringCollection sc, string part_column)
+    : this(md, sc) {
+    _part_column = part_column;
+  }
+
   private void fill_table(BomFeature bom) {
+    string itno = string.Empty;
+    string ptno = string.Empty;
     _cols.Clear();
     _prts.Clear();
     swTable = (ITableAnnotation)bom.IGetTableAnnotations(1);
     part.ClearSelection2(true);
 
     _col_count = swTable.ColumnCount;
+    find_part_column();
     _row_count = swTable.RowCount;
     for (int i = 0; i < _col_count; i++) {
       _cols.Add(swTable.get_DisplayedText(0, i));
@@ -76,10 +84,10 @@ class SWTableType {
     int prtcol = get_column_by_name(_part_column);
     for (int i = 0; i < _row_count; i++) {
       _prts.Add(swTable.get_DisplayedText(i, prtcol));
-      string[] pathnames = (string[])bta.GetModelPathNames(i, string.Empty, string.Empty);
+      string[] pathnames = (string[])bta.GetModelPathNames(i, out itno, out ptno);
       if (pathnames != null) {
         foreach (string pathname in pathnames) {
-          path_list.Add(FileInfo(pathname));
+          path_list.Add(new FileInfo(pathname));
         }
       }
     }
@@ -114,6 +122,14 @@ class SWTableType {
       }
     }
     return -1;
+  }
+
+  private void find_part_column() {
+    for (int i = 0; i < _col_count; i++) {
+      if (swTable.get_DisplayedText(0, i).Trim().ToUpper().Contains("PART")) {
+        _part_column = swTable.get_DisplayedText(0, i).Trim();
+      }
+    }
   }
 
   private int get_row_by_partname(string prt) {

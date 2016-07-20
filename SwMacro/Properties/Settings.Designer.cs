@@ -83,13 +83,37 @@ namespace ProtoDrawingCollector.csproj.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10, 10")]
-        public global::System.Drawing.Point PageNoLocation {
+        [global::System.Configuration.DefaultSettingValueAttribute("-PACKET")]
+        public string Suffix {
             get {
-                return ((global::System.Drawing.Point)(this["PageNoLocation"]));
+                return ((string)(this["Suffix"]));
             }
             set {
-                this["PageNoLocation"] = value;
+                this["Suffix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1178, 20")]
+        public global::System.Drawing.Point PageStampLoc {
+            get {
+                return ((global::System.Drawing.Point)(this["PageStampLoc"]));
+            }
+            set {
+                this["PageStampLoc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int PageStampSize {
+            get {
+                return ((int)(this["PageStampSize"]));
+            }
+            set {
+                this["PageStampSize"] = value;
             }
         }
     }

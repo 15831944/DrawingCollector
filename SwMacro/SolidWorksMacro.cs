@@ -50,7 +50,7 @@ namespace ProtoDrawingCollector.csproj {
 
       try {
         tmpPath = Path.GetTempFileName().Replace(".tmp", ".PDF");
-        path = di + @"\" + pc.PDFCollection[0].Name.Replace(".PDF", "-PROTO.PDF");
+        path = di + @"\" + pc.PDFCollection[0].Name.Replace(".PDF", Properties.Settings.Default.Suffix + ".PDF");
         PDFMerger pm = new PDFMerger(pc.PDFCollection, new FileInfo(tmpPath));
         pm.Merge();
       } catch (Exception e) {
