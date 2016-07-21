@@ -8,8 +8,11 @@
 * Process
  1. Examine BOM of predetermined form.
  2. Check for existing drawing.
+
     a. If there's a PDF of said drawing, then include it.
+
     b. If not, create, then include.
+
  3. Count total pages of included PDFs.
  4. Stamp new page numbers over the original page numbers on each page.
  5. Stitch together into a single PDF.
