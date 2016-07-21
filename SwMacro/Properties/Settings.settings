@@ -34,7 +34,10 @@
       <Value Profile="(Default)">1178, 20</Value>
     </Setting>
     <Setting Name="PageStampSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9</Value>
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="PageStampWhiteoutRectangle" Type="System.Drawing.Rectangle" Scope="User">
+      <Value Profile="(Default)">1154, 20, 47, 16</Value>
     </Setting>
   </Settings>
 </SettingsFile>

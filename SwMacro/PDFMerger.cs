@@ -48,9 +48,15 @@ class PDFMerger {
           PdfImportedPage ip = copy.GetImportedPage(reader, i);
 #if PAGE_NUMBERS
           PdfCopy.PageStamp ps = copy.CreatePageStamp(ip);
+          PdfContentByte cb = ps.GetOverContent();
+          //System.Drawing.Rectangle sdr = new System.Drawing.Rectangle(1154, 20, 47, 16);
+          System.Drawing.Rectangle sdr = ProtoDrawingCollector.csproj.Properties.Settings.Default.PageStampWhiteoutRectangle;
+          Rectangle r = new Rectangle(sdr.Left, sdr.Bottom, sdr.Right, sdr.Top);
+          r.BackgroundColor = BaseColor.WHITE;
+          cb.Rectangle(r);
           Font f = FontFactory.GetFont("Century Gothic", font_size);
           Chunk c = new Chunk(string.Format("{0} OF {1}", document_page_counter, total_pages), f);
-          c.SetBackground(new BaseColor(255, 255, 255));
+          c.SetBackground(BaseColor.WHITE);
           ColumnText.ShowTextAligned(ps.GetOverContent(),
             Element.ALIGN_CENTER,
             new Phrase(c),

@@ -107,13 +107,25 @@ namespace ProtoDrawingCollector.csproj.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
         public int PageStampSize {
             get {
                 return ((int)(this["PageStampSize"]));
             }
             set {
                 this["PageStampSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1154, 20, 47, 16")]
+        public global::System.Drawing.Rectangle PageStampWhiteoutRectangle {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["PageStampWhiteoutRectangle"]));
+            }
+            set {
+                this["PageStampWhiteoutRectangle"] = value;
             }
         }
     }
