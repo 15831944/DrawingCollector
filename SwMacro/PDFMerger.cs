@@ -69,6 +69,9 @@ class PDFMerger {
 
         copy.FreeReader(reader);
         reader.Close();
+        if (ProtoDrawingCollector.csproj.Properties.Settings.Default.AutoDeletePreMergedPDFs) {
+          fi.Delete();
+        }
       }
       document.Close();
       return ms.GetBuffer();
