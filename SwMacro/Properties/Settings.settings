@@ -39,5 +39,11 @@
     <Setting Name="PageStampWhiteoutRectangle" Type="System.Drawing.Rectangle" Scope="User">
       <Value Profile="(Default)">1154, 20, 47, 16</Value>
     </Setting>
+    <Setting Name="AutoDeletePreMergedPDFs" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Recurse" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

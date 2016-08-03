@@ -128,5 +128,29 @@ namespace ProtoDrawingCollector.csproj.Properties {
                 this["PageStampWhiteoutRectangle"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoDeletePreMergedPDFs {
+            get {
+                return ((bool)(this["AutoDeletePreMergedPDFs"]));
+            }
+            set {
+                this["AutoDeletePreMergedPDFs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Recurse {
+            get {
+                return ((bool)(this["Recurse"]));
+            }
+            set {
+                this["Recurse"] = value;
+            }
+        }
     }
 }
