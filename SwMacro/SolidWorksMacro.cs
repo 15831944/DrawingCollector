@@ -52,6 +52,7 @@ namespace ProtoDrawingCollector.csproj {
         tmpPath = Path.GetTempFileName().Replace(".tmp", ".PDF");
         path = di + @"\" + pc.PDFCollection[0].Name.Replace(".PDF", Properties.Settings.Default.Suffix + ".PDF");
         PDFMerger pm = new PDFMerger(pc.PDFCollection, new FileInfo(tmpPath));
+        PDFMerger.deleting_file += m.AppendLineEvent;
         pm.Merge();
       } catch (Exception e) {
         m.AppendLine(e.Message);
@@ -66,6 +67,10 @@ namespace ProtoDrawingCollector.csproj {
       m.AppendLine("Created '" + path + "'.");
       m.AppendLine("Opening...");
       GCandOpen();
+
+      if (Properties.Settings.Default.AutoDeletePreMergedPDFs) {
+        PDFMerger.delete_pdfs(pc.PDFCollection);
+      }
     }
 
     private void GCandOpen() {
