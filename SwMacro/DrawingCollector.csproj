@@ -87,9 +87,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks (3)\api\redist\CLR2\SolidWorks.Interop.swconst.dll</HintPath>
     </Reference>
-    <Reference Include="SolidWorks.Proxy.Sldworks, Version=22.3.0.56, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SolidWorks.Proxy.Sldworks, Version=22.5.0.77, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks (3)\SolidWorks.Proxy.Sldworks.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\SolidWorks.Proxy.Sldworks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
