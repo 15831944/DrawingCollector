@@ -64,6 +64,7 @@ namespace ProtoDrawingCollector.csproj {
       // 
       // button1
       // 
+      this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.button1.Location = new System.Drawing.Point(528, 225);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(91, 23);
