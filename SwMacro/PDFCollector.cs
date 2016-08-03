@@ -108,22 +108,28 @@ class PDFCollector {
       lfi.AddRange(ss);
     }
 
-    //if (ss.Count > 0) {
-    //  foreach (FileInfo f in ss) {
-    //    if (f != null) {
-    //      string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
-    //      OnAppend(new AppendEventArgs(string.Format("Opening '{0}'...", doc)));
-    //      SwApp.OpenDoc(doc, (int)swDocumentTypes_e.swDocDRAWING);
-    //      SwApp.ActivateDoc(doc);
-    //      ModelDoc2 m = (ModelDoc2)SwApp.ActiveDoc;
-    //      System.Diagnostics.Debug.WriteLine("ss   : " + f.Name);
-    //      System.Diagnostics.Debug.WriteLine(doc);
-    //      collect_drwgs(m);
-    //      OnAppend(new AppendEventArgs(string.Format("Closing '{0}'...", doc)));
-    //      SwApp.CloseDoc(doc);
-    //    }
-    //  }
-    //}
+    if (ProtoDrawingCollector.csproj.Properties.Settings.Default.Recurse) {
+      foreach (FileInfo f in ss) {
+        if (f != null) {
+          string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
+          OnAppend(new AppendEventArgs(string.Format("Opening '{0}'...", doc)));
+          SwApp.OpenDoc(doc, (int)swDocumentTypes_e.swDocDRAWING);
+          SwApp.ActivateDoc(doc);
+          ModelDoc2 m = (ModelDoc2)SwApp.ActiveDoc;
+          SWTableType innerswt = null;
+          try {
+            innerswt = new SWTableType(m, Hashes);
+          } catch (Exception e) {
+            System.Diagnostics.Debug.WriteLine(e.Message);
+          }
+          System.Diagnostics.Debug.WriteLine("ss   : " + f.Name);
+          System.Diagnostics.Debug.WriteLine(doc);
+          collect_drwgs(m, innerswt);
+          OnAppend(new AppendEventArgs(string.Format("Closing '{0}'...", doc)));
+          SwApp.CloseDoc(doc);
+        }
+      }
+    }
   }
 
   private string find_part_column(SWTableType swt) {
