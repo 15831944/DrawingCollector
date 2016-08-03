@@ -64,43 +64,43 @@ class PDFCollector {
       for (int i = 1; i < swt.RowCount; i++) {
         System.Diagnostics.Debug.WriteLine("table: " + swt.GetProperty(i, swt.PartColumn));
         part = swt.GetProperty(i, swt.PartColumn);
-        //if (!part.StartsWith("0")) {        
-        FileInfo partpath = swt.get_path(part);
-        string t = string.Empty;
-        try {
-          t = partpath.FullName.ToUpper();
-        } catch (NullReferenceException) {
-          // it's OK
-        }
-        string ext = Path.GetExtension(t).ToUpper();
-        if (t.Length < 1) continue;
-        FileInfo dwg = new FileInfo(t.Replace(ext, ".SLDDRW"));
-        FileInfo fi = new FileInfo(t.Replace(ext, ".PDF"));
-        if (dwg.Exists && !fi.Exists) {
-          create_pdf(dwg);
-          fi = new FileInfo(fi.FullName);
-          SwApp.CloseDoc(dwg.FullName);
-        }
-        in_lfi = is_in(part, lfi);
-        in_nf = is_in(part, nf);
-        if (dwg != null) {
-          if (!in_lfi && fi.Exists) {
-            ss.Add(fi);
-            OnAppend(new AppendEventArgs(string.Format("Added {0}", fi.Name)));
+        if (!part.StartsWith("0")) {
+          FileInfo partpath = swt.get_path(part);
+          string t = string.Empty;
+          try {
+            t = partpath.FullName.ToUpper();
+          } catch (NullReferenceException) {
+            // it's OK
+          }
+          string ext = Path.GetExtension(t).ToUpper();
+          if (t.Length < 1) continue;
+          FileInfo dwg = new FileInfo(t.Replace(ext, ".SLDDRW"));
+          FileInfo fi = new FileInfo(t.Replace(ext, ".PDF"));
+          if (dwg.Exists && !fi.Exists) {
+            create_pdf(dwg);
+            fi = new FileInfo(fi.FullName);
+            SwApp.CloseDoc(dwg.FullName);
+          }
+          in_lfi = is_in(part, lfi);
+          in_nf = is_in(part, nf);
+          if (dwg != null) {
+            if (!in_lfi && fi.Exists) {
+              ss.Add(fi);
+              OnAppend(new AppendEventArgs(string.Format("Added {0}", fi.Name)));
+            } else {
+              continue;
+            }
           } else {
-            continue;
+            if (!in_nf) {
+              nf.Add(new KeyValuePair<string, string>(part, title));
+              OnAppend(new AppendEventArgs(string.Format("{0} NOT found", part)));
+            } else {
+              continue;
+            }
           }
         } else {
-          if (!in_nf) {
-            nf.Add(new KeyValuePair<string, string>(part, title));
-            OnAppend(new AppendEventArgs(string.Format("{0} NOT found", part)));
-          } else {
-            continue;
-          }
+          System.Diagnostics.Debug.WriteLine("Skipping " + part);
         }
-        //} else {
-        //  System.Diagnostics.Debug.WriteLine("Skipping " + part);
-        //}
       }
 
       lfi.AddRange(ss);
@@ -185,11 +185,11 @@ class PDFCollector {
     }
   }
 
-  
+
 
   public static bool is_in(FileInfo f, List<FileInfo> l) {
     foreach (FileInfo fi in l) {
-      if (f != null && Path.GetFileNameWithoutExtension(f.Name).ToUpper() == 
+      if (f != null && Path.GetFileNameWithoutExtension(f.Name).ToUpper() ==
         Path.GetFileNameWithoutExtension(fi.Name).ToUpper()) {
         return true;
       }
@@ -199,7 +199,7 @@ class PDFCollector {
 
   public static bool is_in(FileInfo f, List<KeyValuePair<string, string>> l) {
     foreach (KeyValuePair<string, string> fi in l) {
-      if (f != null && Path.GetFileNameWithoutExtension(f.Name).ToUpper() == 
+      if (f != null && Path.GetFileNameWithoutExtension(f.Name).ToUpper() ==
   Path.GetFileNameWithoutExtension(fi.Key).ToUpper()) {
         return true;
       }
