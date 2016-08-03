@@ -50,10 +50,12 @@ namespace ProtoDrawingCollector.csproj {
     }
     private void checkBox1_CheckedChanged(object sender, EventArgs e) {
       Properties.Settings.Default.AutoDeletePreMergedPDFs = checkBox1.Checked;
+      Properties.Settings.Default.Save();
     }
 
     private void checkBox2_CheckedChanged(object sender, EventArgs e) {
       Properties.Settings.Default.Recurse = checkBox2.Checked;
+      Properties.Settings.Default.Save();
     }
 
     private void button1_Click(object sender, EventArgs e) {
