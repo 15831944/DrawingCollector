@@ -15,7 +15,7 @@ namespace ProtoDrawingCollector.csproj {
     //public delegate void AppendEvent(object o, EventArgs e);
 
     public void Append(string str) {
-      rtbMessage.Text += str;
+      rtbMessage.AppendText(str);
     }
 
     public void AppendLine(string str) {
@@ -33,6 +33,8 @@ namespace ProtoDrawingCollector.csproj {
     private void Message_Load(object sender, EventArgs e) {
       Location = Properties.Settings.Default.MessageLocation;
       Size = Properties.Settings.Default.MessageSize;
+      checkBox1.Checked = Properties.Settings.Default.AutoDeletePreMergedPDFs;
+      checkBox2.Checked = Properties.Settings.Default.Recurse;
     }
 
     private void Message_FormClosing(object sender, FormClosingEventArgs e) {
@@ -45,6 +47,17 @@ namespace ProtoDrawingCollector.csproj {
 
     private void Message_FormClosed(object sender, FormClosedEventArgs e) {
       System.GC.Collect(0, GCCollectionMode.Forced);
+    }
+    private void checkBox1_CheckedChanged(object sender, EventArgs e) {
+      Properties.Settings.Default.AutoDeletePreMergedPDFs = checkBox1.Checked;
+    }
+
+    private void checkBox2_CheckedChanged(object sender, EventArgs e) {
+      Properties.Settings.Default.Recurse = checkBox2.Checked;
+    }
+
+    private void button1_Click(object sender, EventArgs e) {
+      Close();
     }
   }
 }
