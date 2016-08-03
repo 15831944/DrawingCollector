@@ -46,7 +46,9 @@ class PDFCollector {
     } catch (Exception e) {
       System.Diagnostics.Debug.WriteLine(e.Message);
     }
-    create_pdf(new FileInfo(fullpath));
+    FileInfo fi = new FileInfo(fullpath);
+    create_pdf(fi);
+    OnAppend(new AppendEventArgs(string.Format("Added {0}", fi.Name)));
     FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
     lfi.Add(top_level);
     collect_drwgs(md, swt);
