@@ -31,7 +31,7 @@
       <Value Profile="(Default)">-PACKET</Value>
     </Setting>
     <Setting Name="PageStampLoc" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">1178, 20</Value>
+      <Value Profile="(Default)">1175, 20</Value>
     </Setting>
     <Setting Name="PageStampSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
@@ -40,10 +40,16 @@
       <Value Profile="(Default)">1154, 20, 47, 16</Value>
     </Setting>
     <Setting Name="AutoDeletePreMergedPDFs" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Recurse" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PageStampWhiteoutRectangleA4" Type="System.Drawing.Rectangle" Scope="User">
+      <Value Profile="(Default)">720, 20, 47, 16</Value>
+    </Setting>
+    <Setting Name="PageStampLocA4" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">743, 20</Value>
     </Setting>
   </Settings>
 </SettingsFile>

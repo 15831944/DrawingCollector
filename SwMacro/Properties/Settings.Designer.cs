@@ -95,7 +95,7 @@ namespace ProtoDrawingCollector.csproj.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1178, 20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1175, 20")]
         public global::System.Drawing.Point PageStampLoc {
             get {
                 return ((global::System.Drawing.Point)(this["PageStampLoc"]));
@@ -131,7 +131,7 @@ namespace ProtoDrawingCollector.csproj.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AutoDeletePreMergedPDFs {
             get {
                 return ((bool)(this["AutoDeletePreMergedPDFs"]));
@@ -143,13 +143,37 @@ namespace ProtoDrawingCollector.csproj.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Recurse {
             get {
                 return ((bool)(this["Recurse"]));
             }
             set {
                 this["Recurse"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("720, 20, 47, 16")]
+        public global::System.Drawing.Rectangle PageStampWhiteoutRectangleA4 {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["PageStampWhiteoutRectangleA4"]));
+            }
+            set {
+                this["PageStampWhiteoutRectangleA4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("743, 20")]
+        public global::System.Drawing.Point PageStampLocA4 {
+            get {
+                return ((global::System.Drawing.Point)(this["PageStampLocA4"]));
+            }
+            set {
+                this["PageStampLocA4"] = value;
             }
         }
     }
