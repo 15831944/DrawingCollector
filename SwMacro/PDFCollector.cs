@@ -108,7 +108,7 @@ class PDFCollector {
       lfi.AddRange(ss);
     }
 
-    if (ProtoDrawingCollector.csproj.Properties.Settings.Default.Recurse) {
+    if (Recurse) {
       foreach (FileInfo f in ss) {
         if (f != null) {
           string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
@@ -268,6 +268,21 @@ class PDFCollector {
     get { return _d; }
     private set { _d = value; }
   }
+
+  private bool _recurse;
+
+  public bool Recurse {
+    get { return _recurse; }
+    set { _recurse = value; }
+  }
+
+  private bool _deletePDFs;
+
+  public bool DeletePDFs {
+    get { return _deletePDFs; }
+    set { _deletePDFs = value; }
+  }
+
 
   class AppendEventArgs : EventArgs {
     public AppendEventArgs() {

@@ -13,6 +13,16 @@ namespace ProtoDrawingCollector.csproj {
     }
 
     //public delegate void AppendEvent(object o, EventArgs e);
+    public static event click_EventHandler click_go;
+
+    public delegate void click_EventHandler(object sender, GoEventArgs e);
+
+    public static void OnGo(GoEventArgs e) {
+      click_EventHandler handler = click_go;
+      if (handler != null) {
+        handler(new object(), e);
+      }
+    }
 
     public void Append(string str) {
       rtbMessage.AppendText(str);
@@ -40,6 +50,8 @@ namespace ProtoDrawingCollector.csproj {
     private void Message_FormClosing(object sender, FormClosingEventArgs e) {
       Properties.Settings.Default.MessageLocation = Location;
       Properties.Settings.Default.MessageSize = Size;
+      Properties.Settings.Default.AutoDeletePreMergedPDFs = checkBox1.Checked;
+      Properties.Settings.Default.Recurse = checkBox2.Checked;
       Properties.Settings.Default.Save();
     }
 
@@ -59,7 +71,49 @@ namespace ProtoDrawingCollector.csproj {
     }
 
     private void button1_Click(object sender, EventArgs e) {
+      Properties.Settings.Default.Save();
       Close();
     }
+
+    private void button2_Click(object sender, EventArgs e) {
+      OnGo(new GoEventArgs(checkBox2.Checked, checkBox1.Checked));
+    }
+
+    private bool Recurse;
+
+    public bool _recurse {
+      get { return Recurse; }
+      set { Recurse = value; }
+    }
+
+    private bool DeletePDFs;
+
+    public bool _deletePdfs {
+      get { return DeletePDFs; }
+      set { DeletePDFs = value; }
+    }
+  }
+
+  public class GoEventArgs : EventArgs {
+    public GoEventArgs(bool recurse, bool delete) {
+      Recurse = recurse;
+      DeletePDFs = delete;
+    }
+
+    private bool _delete;
+
+    public bool DeletePDFs {
+      get { return _delete; }
+      set { _delete = value; }
+    }
+
+
+    private bool _recurse;
+
+    public bool Recurse {
+      get { return _recurse; }
+      set { _recurse = value; }
+    }
+
   }
 }

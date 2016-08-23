@@ -8,19 +8,25 @@ using System.Collections.Generic;
 namespace ProtoDrawingCollector.csproj {
   public partial class SolidWorksMacro {
     public void Main() {
-      m = new Message();
       di = Path.GetDirectoryName((swApp.ActiveDoc as ModelDoc2).GetPathName());
       DrawingData d = new DrawingData(di);
       pc = new PDFCollector(swApp, Properties.Settings.Default.TableHashes, d);
+      m = new Message();
       m.Show();
-      m.AppendLine("Collecting PDF paths...");
 
+      Message.click_go += new Message.click_EventHandler(Message_click_go);
+    }
+
+    public void Message_click_go(object sender, GoEventArgs e) {
+      m.AppendLine("Collecting PDF paths...");
+      _autodelete = e.DeletePDFs;
+      pc.Recurse = e.Recurse;
       try {
         PDFCollector.file_added += m.AppendLineEvent;
         PDFCollector.done += MergeEvent;
         pc.Collect();
-      } catch (Exception e) {
-        m.AppendLine(e.Message);
+      } catch (Exception ex) {
+        m.AppendLine(ex.Message);
       }
     }
 
@@ -68,7 +74,7 @@ namespace ProtoDrawingCollector.csproj {
       m.AppendLine("Opening...");
       GCandOpen();
 
-      if (Properties.Settings.Default.AutoDeletePreMergedPDFs) {
+      if (_autodelete) {
         PDFMerger.delete_pdfs(pc.PDFCollection);
       }
     }
@@ -83,6 +89,8 @@ namespace ProtoDrawingCollector.csproj {
     private string di;
     private string tmpPath;
     private string path;
+
+    private bool _autodelete;
 
     /// <summary>
     ///  The SldWorks swApp variable is pre-assigned for you.
