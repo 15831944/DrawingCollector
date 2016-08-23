@@ -81,11 +81,11 @@
     </Reference>
     <Reference Include="SolidWorks.Interop.SldWorks, Version=22.3.0.56, Culture=neutral, PublicKeyToken=7c4797c3e4eeac03, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks (3)\api\redist\CLR2\SolidWorks.Interop.SldWorks.dll</HintPath>
+      <HintPath>G:\Solid Works\Amstore_Macros\SolidWorks.Interop.SldWorks.dll</HintPath>
     </Reference>
     <Reference Include="SolidWorks.Interop.swconst, Version=22.3.0.56, Culture=neutral, PublicKeyToken=19f43e188e4269d8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks (3)\api\redist\CLR2\SolidWorks.Interop.swconst.dll</HintPath>
+      <HintPath>G:\Solid Works\Amstore_Macros\SolidWorks.Interop.swconst.dll</HintPath>
     </Reference>
     <Reference Include="SolidWorks.Proxy.Sldworks, Version=22.5.0.77, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -151,6 +151,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Settings1.cs" />
     <Compile Include="SolidWorksMacro.cs">
       <SubType>Code</SubType>
     </Compile>
