@@ -8,6 +8,14 @@ using System.Collections.Generic;
 namespace ProtoDrawingCollector.csproj {
   public partial class SolidWorksMacro {
     public void Main() {
+      if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
+        Redbrick_Addin.CutlistData cd = new Redbrick_Addin.CutlistData(Properties.Settings.Default.ConnectionString);
+        try {
+          cd.IncrementOdometer(Redbrick_Addin.CutlistData.Functions.DrawingCollector);
+        } catch (Exception) {
+          //ignore
+        }
+      }
       di = Path.GetDirectoryName((swApp.ActiveDoc as ModelDoc2).GetPathName());
       DrawingData d = new DrawingData(di);
       pc = new PDFCollector(swApp, Properties.Settings.Default.TableHashes, d);
@@ -26,7 +34,13 @@ namespace ProtoDrawingCollector.csproj {
         PDFCollector.done += MergeEvent;
         pc.Collect();
       } catch (Exception ex) {
-        m.AppendLine(ex.Message);
+        string msg = string.Format("[EE] Message: {0}\n[EE] In: {1}\n[EE] Stack trace: {2}\n[EE] Source: {3}", 
+          ex.Message, 
+          ex.TargetSite.ToString(), 
+          ex.StackTrace, 
+          ex.Source);
+        m.AppendLine(msg);
+        //m.AppendLine("{\rtf1\ansi \b " + msg + "\b0}");
       }
     }
 
@@ -70,6 +84,7 @@ namespace ProtoDrawingCollector.csproj {
         m.AppendLine(e.Message);
       }
 
+      m.DisableGo();
       m.AppendLine("Created '" + path + "'.");
       m.AppendLine("Opening...");
       GCandOpen();
