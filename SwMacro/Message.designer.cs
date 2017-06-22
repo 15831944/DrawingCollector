@@ -35,6 +35,7 @@ namespace ProtoDrawingCollector.csproj {
       this.rtbMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
+      this.rtbMessage.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.rtbMessage.Location = new System.Drawing.Point(12, 35);
       this.rtbMessage.Name = "rtbMessage";
       this.rtbMessage.Size = new System.Drawing.Size(607, 184);

@@ -25,7 +25,30 @@ namespace ProtoDrawingCollector.csproj {
     }
 
     public void Append(string str) {
-      rtbMessage.AppendText(str);
+      if (str.Contains(@"[EE]")) {
+        Font cf = rtbMessage.SelectionFont;
+        Color cc = rtbMessage.SelectionColor;
+        rtbMessage.SelectionFont = new Font(cf.FontFamily, cf.Size, FontStyle.Bold);
+        rtbMessage.SelectionColor = Color.Red;
+        rtbMessage.AppendText(str);
+        rtbMessage.SelectionFont = cf;
+        rtbMessage.SelectionColor = cc;
+      } else if (str.Contains("Using") || str.Contains("Found")) {
+        Font cf = rtbMessage.SelectionFont;
+        rtbMessage.SelectionFont = new Font(cf.FontFamily, cf.Size, FontStyle.Italic | FontStyle.Underline);
+        rtbMessage.AppendText(str);
+        rtbMessage.SelectionFont = cf;
+      } else if (str.Contains("Added")) {
+        Font cf = rtbMessage.SelectionFont;
+        Color cc = rtbMessage.SelectionColor;
+        rtbMessage.SelectionFont = new Font(cf.FontFamily, cf.Size, FontStyle.Bold);
+        rtbMessage.SelectionColor = Color.Green;
+        rtbMessage.AppendText(" +  " + str);
+        rtbMessage.SelectionFont = cf;
+        rtbMessage.SelectionColor = cc;
+      } else {
+        rtbMessage.AppendText(str);
+      }
     }
 
     public void AppendLine(string str) {
@@ -38,6 +61,10 @@ namespace ProtoDrawingCollector.csproj {
 
     public virtual void OnAppendEvent(EventArgs e) {
       BeginInvoke(new EventHandler(AppendLineEvent), this, e);
+    }
+
+    public void DisableGo() {
+      button2.Enabled = false;
     }
 
     private void Message_Load(object sender, EventArgs e) {
