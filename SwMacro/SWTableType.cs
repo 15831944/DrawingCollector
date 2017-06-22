@@ -19,6 +19,7 @@ class SWTableType {
   private string _part_column = "PART NUMBER";
   private bool initialated = false;
   private List<FileInfo> path_list = new List<FileInfo>();
+  public IBomFeature found_bom = null;
 
   public SWTableType(ModelDoc2 md, string tablehash) {
     _masterHash = tablehash;
@@ -29,6 +30,7 @@ class SWTableType {
       BomFeature swBom = null;
       try {
         swBom = (BomFeature)swSelMgr.GetSelectedObject6(1, -1);
+        found_bom = swBom;
       } catch {
         // 
       }
@@ -65,6 +67,7 @@ class SWTableType {
   }
 
   private void fill_table(BomFeature bom) {
+    found_bom = bom;
     string itno = string.Empty;
     string ptno = string.Empty;
     _cols.Clear();
@@ -78,7 +81,6 @@ class SWTableType {
     for (int i = 0; i < _col_count; i++) {
       _cols.Add(swTable.get_DisplayedText(0, i));
     }
-
     object[] bomtaa = (object[])bom.GetTableAnnotations();
     BomTableAnnotation bta = (BomTableAnnotation)bomtaa[0];
     int prtcol = get_column_by_name(_part_column);
