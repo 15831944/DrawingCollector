@@ -87,7 +87,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>G:\Solid Works\Amstore_Macros\SolidWorks.Interop.swconst.dll</HintPath>
     </Reference>
-    <Reference Include="SolidWorks.Proxy.Sldworks, Version=22.5.0.77, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SolidWorks.Proxy.Sldworks, Version=24.0.0.161, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\SolidWorks.Proxy.Sldworks.dll</HintPath>
     </Reference>
@@ -113,6 +113,7 @@
   -->
   <ItemGroup>
     <AppDesigner Include="Properties\" />
+    <Compile Include="CutlistData.cs" />
     <Compile Include="DrawingData.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Message.cs">

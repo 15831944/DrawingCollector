@@ -74,10 +74,10 @@ namespace ProtoDrawingCollector.csproj.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=AMSTORE-SQL-05;Database=ENGINEERING;Trusted_Connection=True;")]
-        public string CutlistConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("Driver={SQL Server};SERVER=AMSTORE-SQL-05;DATABASE=ENGINEERING")]
+        public string ConnectionString {
             get {
-                return ((string)(this["CutlistConnectionString"]));
+                return ((string)(this["ConnectionString"]));
             }
         }
         
