@@ -48,9 +48,10 @@ class PDFCollector {
     }
     FileInfo fi = new FileInfo(fullpath);
     create_pdf(fi);
-    OnAppend(new AppendEventArgs(string.Format("Added {0}", fi.Name)));
+    OnAppend(new AppendEventArgs(string.Format("Added {0}...", fi.Name)));
     FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
     lfi.Add(top_level);
+    OnAppend(new AppendEventArgs(string.Format(@"Using {0}...", swt.found_bom.Name)));
     collect_drwgs(md, swt);
     OnDone(EventArgs.Empty);
   }
@@ -107,26 +108,29 @@ class PDFCollector {
 
       lfi.AddRange(ss);
     }
-
+    string indent = string.Empty;
     if (Recurse) {
       foreach (FileInfo f in ss) {
+        indent = indent + " > ";
         if (f != null) {
           string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
-          OnAppend(new AppendEventArgs(string.Format("Opening '{0}'...", doc)));
+          OnAppend(new AppendEventArgs(string.Format("{0} Opening '{1}'...", indent, doc)));
           SwApp.OpenDoc(doc, (int)swDocumentTypes_e.swDocDRAWING);
           SwApp.ActivateDoc(doc);
           ModelDoc2 m = (ModelDoc2)SwApp.ActiveDoc;
           SWTableType innerswt = null;
           try {
             innerswt = new SWTableType(m, Hashes);
+            OnAppend(new AppendEventArgs(string.Format("{0} Found table: {1}", indent, innerswt.found_bom.Name)));
           } catch (Exception e) {
             System.Diagnostics.Debug.WriteLine(e.Message);
           }
           System.Diagnostics.Debug.WriteLine("ss   : " + f.Name);
           System.Diagnostics.Debug.WriteLine(doc);
           collect_drwgs(m, innerswt);
-          OnAppend(new AppendEventArgs(string.Format("Closing '{0}'...", doc)));
+          OnAppend(new AppendEventArgs(string.Format("{0} Closing '{1}'...", indent, doc)));
           SwApp.CloseDoc(doc);
+          indent = indent.Substring(0, indent.Length - 3);
         }
       }
     }
@@ -142,7 +146,8 @@ class PDFCollector {
   }
 
   private void create_pdf(FileInfo p) {
-    OnAppend(new AppendEventArgs(string.Format("Creating {0}...", p.Name)));
+    OnAppend(new AppendEventArgs(string.Format("Creating {0}...",
+      p.Name.Replace(@".SLDDRW", ProtoDrawingCollector.csproj.Properties.Settings.Default.Suffix + @".PDF"))));
     int dt = (int)SolidWorks.Interop.swconst.swDocumentTypes_e.swDocDRAWING;
     int odo = (int)SolidWorks.Interop.swconst.swOpenDocOptions_e.swOpenDocOptions_Silent;
     int err = 0;
