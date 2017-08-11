@@ -52,11 +52,11 @@ class PDFCollector {
     FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
     lfi.Add(top_level);
     OnAppend(new AppendEventArgs(string.Format(@"Using {0}...", swt.found_bom.Name)));
-    collect_drwgs(md, swt);
+    collect_drwgs(md, swt, 1);
     OnDone(EventArgs.Empty);
   }
 
-  private void collect_drwgs(ModelDoc2 md, SWTableType swt) {
+  private void collect_drwgs(ModelDoc2 md, SWTableType swt, int lvl) {
     string title = md.GetTitle();
 
     List<FileInfo> ss = new List<FileInfo>();
@@ -111,7 +111,9 @@ class PDFCollector {
     string indent = string.Empty;
     if (Recurse) {
       foreach (FileInfo f in ss) {
-        indent = indent + " > ";
+        for (int i = 0; i < lvl; i++) {
+          indent = indent + " > ";
+        }
         if (f != null) {
           string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
           OnAppend(new AppendEventArgs(string.Format("{0} Opening '{1}'...", indent, doc)));
@@ -127,10 +129,11 @@ class PDFCollector {
           }
           System.Diagnostics.Debug.WriteLine("ss   : " + f.Name);
           System.Diagnostics.Debug.WriteLine(doc);
-          collect_drwgs(m, innerswt);
+          collect_drwgs(m, innerswt, ++lvl);
           OnAppend(new AppendEventArgs(string.Format("{0} Closing '{1}'...", indent, doc)));
+          indent = string.Empty;
+          --lvl;
           SwApp.CloseDoc(doc);
-          indent = indent.Substring(0, indent.Length - 3);
         }
       }
     }
