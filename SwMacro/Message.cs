@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+
 namespace ProtoDrawingCollector.csproj {
   public partial class Message : Form {
     public Message() {
@@ -23,6 +26,8 @@ namespace ProtoDrawingCollector.csproj {
         handler(new object(), e);
       }
     }
+
+    public delegate void select_BOM(object sender, BOMEventArgs e);
 
     public void Append(string str) {
       if (str.Contains(@"[EE]")) {
@@ -103,7 +108,10 @@ namespace ProtoDrawingCollector.csproj {
     }
 
     private void button2_Click(object sender, EventArgs e) {
-      OnGo(new GoEventArgs(checkBox2.Checked, checkBox1.Checked));
+      OnGo(new GoEventArgs(checkBox2.Checked,
+        checkBox1.Checked,
+        radioButton2.Checked ? PDFCollector.CreateFileType.DXFS : PDFCollector.CreateFileType.PDFS
+        ));
     }
 
     private bool Recurse;
@@ -119,12 +127,53 @@ namespace ProtoDrawingCollector.csproj {
       get { return DeletePDFs; }
       set { DeletePDFs = value; }
     }
+
+    private void radioButton1_CheckedChanged(object sender, EventArgs e) {
+      if ((sender as RadioButton).Checked) {
+        Text = @"Creating and Merging PDFs...";
+        checkBox1.Checked = Properties.Settings.Default.AutoDeletePreMergedPDFs;
+        checkBox1.Enabled = true;
+      }
+    }
+
+    private void radioButton2_CheckedChanged(object sender, EventArgs e) {
+      if ((sender as RadioButton).Checked) {
+        Text = @"Creating DXFs...";
+        checkBox1.Checked = false;
+        checkBox1.Enabled = false;
+      }
+    }
+  }
+
+  public class BOMEventArgs : EventArgs {
+    public BOMEventArgs(BomFeature bomf) {
+      BOM = bomf;
+      //if (e.BOM is BomFeature) {
+      //  m.AppendLine(string.Format(@"Selected {0}.", e.BOM.Name));
+      //}
+    }
+
+    private BomFeature _bom;
+
+    public BomFeature BOM {
+      get { return _bom; }
+      set { _bom = value; }
+    }
+
   }
 
   public class GoEventArgs : EventArgs {
-    public GoEventArgs(bool recurse, bool delete) {
+    public GoEventArgs(bool recurse, bool delete, PDFCollector.CreateFileType type) {
       Recurse = recurse;
       DeletePDFs = delete;
+      TypeToCreate = type;
+    }
+
+    private PDFCollector.CreateFileType _typeToCreate;
+
+    public PDFCollector.CreateFileType TypeToCreate {
+      get { return _typeToCreate; }
+      set { _typeToCreate = value; }
     }
 
     private bool _delete;
