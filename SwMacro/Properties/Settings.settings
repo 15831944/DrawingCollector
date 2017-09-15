@@ -17,8 +17,8 @@
   &lt;string&gt;E-78-D8-47-DC-44-3C-93-6E-DB-E8-24-C3-63-22-FD&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="TargetPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="TargetPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\</Value>
     </Setting>
     <Setting Name="ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -50,6 +50,9 @@
     </Setting>
     <Setting Name="PageStampLocA4" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">743, 20</Value>
+    </Setting>
+    <Setting Name="CompressionLevel" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
     </Setting>
   </Settings>
 </SettingsFile>

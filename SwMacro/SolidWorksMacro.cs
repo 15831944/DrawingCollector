@@ -52,10 +52,14 @@ namespace ProtoDrawingCollector.csproj {
     }
 
     public void Message_click_go(object sender, GoEventArgs e) {
+      if (e.TypeToCreate != PDFCollector.CreateFileType.PDFS) {
+        path = e.TargetDir;
+      }
       m.AppendLine("Collecting PDF paths...");
       _autodelete = e.DeletePDFs;
       pc.Recurse = e.Recurse;
       pc.TypeToCreate = e.TypeToCreate;
+      _compression_level = e.CompressionLevel;
       try {
         PDFCollector.file_added += m.AppendLineEvent;
         if (e.TypeToCreate == PDFCollector.CreateFileType.PDFS) {
@@ -140,7 +144,7 @@ namespace ProtoDrawingCollector.csproj {
     private string di;
     private string tmpPath;
     private string path;
-
+    private int _compression_level;
     private bool _autodelete;
 
     /// <summary>

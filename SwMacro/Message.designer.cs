@@ -30,6 +30,10 @@ namespace ProtoDrawingCollector.csproj {
       this.button2 = new System.Windows.Forms.Button();
       this.radioButton1 = new System.Windows.Forms.RadioButton();
       this.radioButton2 = new System.Windows.Forms.RadioButton();
+      this.textBox1 = new System.Windows.Forms.TextBox();
+      this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+      this.label1 = new System.Windows.Forms.Label();
+      ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
       this.SuspendLayout();
       // 
       // rtbMessage
@@ -112,11 +116,42 @@ namespace ProtoDrawingCollector.csproj {
       this.radioButton2.UseVisualStyleBackColor = true;
       this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
       // 
+      // textBox1
+      // 
+      this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBox1.Location = new System.Drawing.Point(157, 7);
+      this.textBox1.Name = "textBox1";
+      this.textBox1.Size = new System.Drawing.Size(244, 22);
+      this.textBox1.TabIndex = 8;
+      this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseDoubleClick);
+      // 
+      // numericUpDown1
+      // 
+      this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.numericUpDown1.Location = new System.Drawing.Point(522, 331);
+      this.numericUpDown1.Name = "numericUpDown1";
+      this.numericUpDown1.Size = new System.Drawing.Size(39, 22);
+      this.numericUpDown1.TabIndex = 9;
+      // 
+      // label1
+      // 
+      this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(414, 338);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(102, 13);
+      this.label1.TabIndex = 10;
+      this.label1.Text = "Compression Level";
+      // 
       // Message
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(670, 363);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.numericUpDown1);
+      this.Controls.Add(this.textBox1);
       this.Controls.Add(this.radioButton2);
       this.Controls.Add(this.radioButton1);
       this.Controls.Add(this.button2);
@@ -130,6 +165,7 @@ namespace ProtoDrawingCollector.csproj {
       this.Load += new System.EventHandler(this.Message_Load);
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Message_FormClosed);
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Message_FormClosing);
+      ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -144,5 +180,8 @@ namespace ProtoDrawingCollector.csproj {
     private System.Windows.Forms.Button button2;
     private System.Windows.Forms.RadioButton radioButton1;
     private System.Windows.Forms.RadioButton radioButton2;
+    private System.Windows.Forms.TextBox textBox1;
+    private System.Windows.Forms.NumericUpDown numericUpDown1;
+    private System.Windows.Forms.Label label1;
   }
 }

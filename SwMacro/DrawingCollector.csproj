@@ -67,6 +67,10 @@
   </PropertyGroup>
   <!-- This sections specifies references for the project. -->
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.8.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BuildPDF\SwMacro\bin\Release\itextsharp.dll</HintPath>
@@ -114,6 +118,7 @@
   <ItemGroup>
     <AppDesigner Include="Properties\" />
     <Compile Include="CutlistData.cs" />
+    <Compile Include="DocumentZipper.cs" />
     <Compile Include="DrawingData.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Message.cs">
