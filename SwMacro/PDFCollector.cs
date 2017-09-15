@@ -9,9 +9,10 @@ using System.Runtime.InteropServices;
 
 using BuildPDF.csproj;
 
-class PDFCollector {
+public class PDFCollector {
   private List<FileInfo> lfi = new List<FileInfo>();
   private List<KeyValuePair<string, string>> nf = new List<KeyValuePair<string, string>>();
+  private string targetExt = string.Empty;
 
   public PDFCollector(SldWorks swApp, System.Collections.Specialized.StringCollection hashes, DrawingData dd) {
     _swApp = swApp;
@@ -22,6 +23,11 @@ class PDFCollector {
   public static event EventHandler file_added;
   public static event EventHandler done;
   public delegate void AppendEvent(object o, EventArgs e);
+
+  public enum CreateFileType {
+    PDFS,
+    DXFS
+  }
 
   public static void OnAppend(EventArgs e) {
     EventHandler handler = file_added;
@@ -47,7 +53,7 @@ class PDFCollector {
       System.Diagnostics.Debug.WriteLine(e.Message);
     }
     FileInfo fi = new FileInfo(fullpath);
-    create_pdf(fi);
+    create_dwg(fi);
     OnAppend(new AppendEventArgs(string.Format("Added {0}...", fi.Name)));
     FileInfo top_level = d.GetPath(Path.GetFileNameWithoutExtension(fullpath));
     lfi.Add(top_level);
@@ -78,9 +84,9 @@ class PDFCollector {
           string ext = Path.GetExtension(t).ToUpper();
           if (t.Length < 1) continue;
           FileInfo dwg = new FileInfo(t.Replace(ext, ".SLDDRW"));
-          FileInfo fi = new FileInfo(t.Replace(ext, ".PDF"));
+          FileInfo fi = new FileInfo(t.Replace(ext, targetExt));
           if (dwg.Exists && !fi.Exists) {
-            create_pdf(dwg);
+            create_dwg(dwg);
             fi = new FileInfo(fi.FullName);
             SwApp.CloseDoc(dwg.FullName);
           }
@@ -115,7 +121,7 @@ class PDFCollector {
           indent = indent + " > ";
         }
         if (f != null) {
-          string doc = f.FullName.ToUpper().Replace(".PDF", ".SLDDRW");
+          string doc = f.FullName.ToUpper().Replace(targetExt, ".SLDDRW");
           OnAppend(new AppendEventArgs(string.Format("{0} Opening '{1}'...", indent, doc)));
           SwApp.OpenDoc(doc, (int)swDocumentTypes_e.swDocDRAWING);
           SwApp.ActivateDoc(doc);
@@ -148,23 +154,23 @@ class PDFCollector {
     return "PART NUMBER";
   }
 
-  private void create_pdf(FileInfo p) {
-    OnAppend(new AppendEventArgs(string.Format("Creating {0}...",
-      p.Name.Replace(@".SLDDRW", ProtoDrawingCollector.csproj.Properties.Settings.Default.Suffix + @".PDF"))));
+  private void create_dwg(FileInfo p) {
     int dt = (int)SolidWorks.Interop.swconst.swDocumentTypes_e.swDocDRAWING;
     int odo = (int)SolidWorks.Interop.swconst.swOpenDocOptions_e.swOpenDocOptions_Silent;
     int err = 0;
     int warn = 0;
+    string newName = p.Name.Replace(".SLDDRW", targetExt);
+    string tmpFile = string.Format(@"{0}\{1}", Path.GetTempPath(), newName);
+    string fileName = p.FullName.Replace(".SLDDRW", targetExt);
+    int saveVersion = (int)swSaveAsVersion_e.swSaveAsCurrentVersion;
+    int saveOptions = (int)swSaveAsOptions_e.swSaveAsOptions_Silent;
+    bool success;
+    OnAppend(new AppendEventArgs(string.Format("Creating {0}...",
+      p.Name.Replace(@".SLDDRW", targetExt))));
     SwApp.OpenDocSilent(p.FullName, dt, ref odo);
     SwApp.ActivateDoc3(p.FullName,
       true,
       (int)SolidWorks.Interop.swconst.swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
-    string newName = p.Name.Replace(".SLDDRW", ".PDF");
-    string tmpFile = string.Format(@"{0}\{1}", Path.GetTempPath(), newName);
-    string fileName = p.FullName.Replace(".SLDDRW", ".PDF");
-    int saveVersion = (int)swSaveAsVersion_e.swSaveAsCurrentVersion;
-    int saveOptions = (int)swSaveAsOptions_e.swSaveAsOptions_Silent;
-    bool success;
     success = (SwApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile, saveVersion, saveOptions, ref err, ref warn);
     try {
       File.Copy(tmpFile, fileName, true);
@@ -201,7 +207,111 @@ class PDFCollector {
     }
   }
 
+  //private void create_pdf(FileInfo p) {
+  //  OnAppend(new AppendEventArgs(string.Format("Creating {0}...",
+  //    p.Name.Replace(@".SLDDRW", ProtoDrawingCollector.csproj.Properties.Settings.Default.Suffix + @".PDF"))));
+  //  int dt = (int)SolidWorks.Interop.swconst.swDocumentTypes_e.swDocDRAWING;
+  //  int odo = (int)SolidWorks.Interop.swconst.swOpenDocOptions_e.swOpenDocOptions_Silent;
+  //  int err = 0;
+  //  int warn = 0;
+  //  SwApp.OpenDocSilent(p.FullName, dt, ref odo);
+  //  SwApp.ActivateDoc3(p.FullName,
+  //    true,
+  //    (int)SolidWorks.Interop.swconst.swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
+  //  string newName = p.Name.Replace(".SLDDRW", ".PDF");
+  //  string tmpFile = string.Format(@"{0}\{1}", Path.GetTempPath(), newName);
+  //  string fileName = p.FullName.Replace(".SLDDRW", ".PDF");
+  //  int saveVersion = (int)swSaveAsVersion_e.swSaveAsCurrentVersion;
+  //  int saveOptions = (int)swSaveAsOptions_e.swSaveAsOptions_Silent;
+  //  bool success;
+  //  success = (SwApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile, saveVersion, saveOptions, ref err, ref warn);
+  //  try {
+  //    File.Copy(tmpFile, fileName, true);
+  //  } catch (UnauthorizedAccessException uae) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("You don't have the reqired permission to access '{0}'.", fileName),
+  //        uae);
+  //  } catch (ArgumentException ae) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Either '{0}' or '{1}' is not a proper file name.", tmpFile, fileName),
+  //        ae);
+  //  } catch (PathTooLongException ptle) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is too long.", tmpFile, fileName),
+  //        ptle);
+  //  } catch (DirectoryNotFoundException dnfe) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is invalid.", tmpFile, fileName),
+  //        dnfe);
+  //  } catch (FileNotFoundException fnfe) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Crap! I lost '{0}'!", tmpFile),
+  //        fnfe);
+  //  } catch (IOException) {
+  //    System.Windows.Forms.MessageBox.Show(
+  //        String.Format("If you have the file, '{0}', selected in an Explorer window, " +
+  //        "you may have to close it.", fileName), "This file is open somewhere.",
+  //        System.Windows.Forms.MessageBoxButtons.OK,
+  //        System.Windows.Forms.MessageBoxIcon.Error);
+  //  } catch (NotSupportedException nse) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is an invalid format.",
+  //        tmpFile, fileName), nse);
+  //  }
+  //}
 
+  //private void create_dxf(FileInfo p) {
+  //  OnAppend(new AppendEventArgs(string.Format("Creating {0}...",
+  //    p.Name.Replace(@".SLDDRW", ProtoDrawingCollector.csproj.Properties.Settings.Default.Suffix + @".DXF"))));
+  //  int dt = (int)SolidWorks.Interop.swconst.swDocumentTypes_e.swDocDRAWING;
+  //  int odo = (int)SolidWorks.Interop.swconst.swOpenDocOptions_e.swOpenDocOptions_Silent;
+  //  int err = 0;
+  //  int warn = 0;
+  //  SwApp.OpenDocSilent(p.FullName, dt, ref odo);
+  //  SwApp.ActivateDoc3(p.FullName,
+  //    true,
+  //    (int)SolidWorks.Interop.swconst.swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
+  //  string newName = p.Name.Replace(".SLDDRW", ".DXF");
+  //  string tmpFile = string.Format(@"{0}\{1}", Path.GetTempPath(), newName);
+  //  string fileName = p.FullName.Replace(".SLDDRW", ".DXF");
+  //  int saveVersion = (int)swSaveAsVersion_e.swSaveAsCurrentVersion;
+  //  int saveOptions = (int)swSaveAsOptions_e.swSaveAsOptions_Silent;
+  //  bool success;
+  //  success = (SwApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile, saveVersion, saveOptions, ref err, ref warn);
+  //  try {
+  //    File.Copy(tmpFile, fileName, true);
+  //  } catch (UnauthorizedAccessException uae) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("You don't have the reqired permission to access '{0}'.", fileName),
+  //        uae);
+  //  } catch (ArgumentException ae) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Either '{0}' or '{1}' is not a proper file name.", tmpFile, fileName),
+  //        ae);
+  //  } catch (PathTooLongException ptle) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is too long.", tmpFile, fileName),
+  //        ptle);
+  //  } catch (DirectoryNotFoundException dnfe) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is invalid.", tmpFile, fileName),
+  //        dnfe);
+  //  } catch (FileNotFoundException fnfe) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Crap! I lost '{0}'!", tmpFile),
+  //        fnfe);
+  //  } catch (IOException) {
+  //    System.Windows.Forms.MessageBox.Show(
+  //        String.Format("If you have the file, '{0}', selected in an Explorer window, " +
+  //        "you may have to close it.", fileName), "This file is open somewhere.",
+  //        System.Windows.Forms.MessageBoxButtons.OK,
+  //        System.Windows.Forms.MessageBoxIcon.Error);
+  //  } catch (NotSupportedException nse) {
+  //    throw new Exceptions.BuildPDFException(
+  //        String.Format("Source='{0}'; Dest='{1}' <= One of these is an invalid format.",
+  //        tmpFile, fileName), nse);
+  //  }
+  //}
 
   public static bool is_in(FileInfo f, List<FileInfo> l) {
     foreach (FileInfo fi in l) {
@@ -290,6 +400,28 @@ class PDFCollector {
     get { return _deletePDFs; }
     set { _deletePDFs = value; }
   }
+
+  private CreateFileType _typeToCreate;
+
+  public CreateFileType TypeToCreate {
+    get { return _typeToCreate; }
+    set {
+      _typeToCreate = value;
+
+      switch (TypeToCreate) {
+        case CreateFileType.PDFS:
+          targetExt = @".PDF";
+          break;
+        case CreateFileType.DXFS:
+          targetExt = @".DXF";
+          break;
+        default:
+          break;
+      }
+
+    }
+  }
+      
 
 
   class AppendEventArgs : EventArgs {

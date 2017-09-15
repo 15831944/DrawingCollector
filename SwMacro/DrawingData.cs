@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Data.SqlClient;
 
-class DrawingData {
+public class DrawingData {
   public DrawingData(string current_dir) {
     CurrentWorkingDirectory = new DirectoryInfo(current_dir);
   }
@@ -12,7 +12,7 @@ class DrawingData {
   public FileInfo GetPath(string filename) {
     try {
       return CurrentWorkingDirectory.GetFiles(filename + ".PDF", SearchOption.TopDirectoryOnly)[0];
-    } catch (IndexOutOfRangeException ioore) {
+    } catch (IndexOutOfRangeException) {
       return null;
     }
   }
