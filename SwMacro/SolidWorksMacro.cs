@@ -23,15 +23,46 @@ namespace ProtoDrawingCollector.csproj {
       m.Show();
 
       Message.click_go += new Message.click_EventHandler(Message_click_go);
+
+      DrawingDoc p = (DrawingDoc)swApp.ActiveDoc;
+
+      //p.UserSelectionPostNotify += p_UserSelectionPostNotify;
+      //selected_bom += m.AppendLineEvent;
+    }
+
+
+    int p_UserSelectionPostNotify() {
+      ModelDoc2 md = (swApp.ActiveDoc as ModelDoc2);
+      DrawingDoc p = (swApp.ActiveDoc as DrawingDoc);
+      SelectionMgr sMgr = (SelectionMgr)md.SelectionManager;
+      if (sMgr.GetSelectedObject6(1, -1) is BomFeature) {
+        BomFeature bomf = (BomFeature)sMgr.GetSelectedObject6(1, -1);
+        OnSelectedBOM(new AppendEventArgs(string.Format(@"Selected {0}.", bomf.Name)));
+      }
+      return 0;
+    }
+
+    public static event EventHandler selected_bom;
+
+    public static void OnSelectedBOM(AppendEventArgs e) {
+      EventHandler handler = selected_bom;
+      if (handler != null) {
+        handler(new object(), e);
+      }
     }
 
     public void Message_click_go(object sender, GoEventArgs e) {
       m.AppendLine("Collecting PDF paths...");
       _autodelete = e.DeletePDFs;
       pc.Recurse = e.Recurse;
+      pc.TypeToCreate = e.TypeToCreate;
       try {
         PDFCollector.file_added += m.AppendLineEvent;
-        PDFCollector.done += MergeEvent;
+        if (e.TypeToCreate == PDFCollector.CreateFileType.PDFS) {
+          PDFCollector.done += MergeEvent;
+        } else {
+          PDFCollector.done += NoMergeEvent;
+        }
         pc.Collect();
       } catch (Exception ex) {
         string msg = string.Format("[EE] Message: {0}\n[EE] In: {1}\n[EE] Stack trace: {2}\n[EE] Source: {3}", 
@@ -42,6 +73,11 @@ namespace ProtoDrawingCollector.csproj {
         m.AppendLine(msg);
         //m.AppendLine("{\rtf1\ansi \b " + msg + "\b0}");
       }
+    }
+
+    private void NoMergeEvent(object o, EventArgs e) {
+      m.AppendLine("Done.");
+      m.DisableGo();
     }
 
     private void MergeEvent(object o, EventArgs e) {
@@ -84,9 +120,9 @@ namespace ProtoDrawingCollector.csproj {
         m.AppendLine(e.Message);
       }
 
-      m.DisableGo();
       m.AppendLine("Created '" + path + "'.");
       m.AppendLine("Opening...");
+      m.DisableGo();
       GCandOpen();
 
       if (_autodelete) {
@@ -111,5 +147,28 @@ namespace ProtoDrawingCollector.csproj {
     ///  The SldWorks swApp variable is pre-assigned for you.
     /// </summary>
     public SldWorks swApp;
+  }
+
+  public class AppendEventArgs : EventArgs {
+    public AppendEventArgs() {
+      _msg = string.Empty;
+    }
+
+
+    public AppendEventArgs(string msg) {
+      _msg = msg;
+    }
+
+    public override string ToString() {
+      return _msg;
+    }
+
+    private string _msg;
+
+    public string Message {
+      get { return _msg; }
+      set { _msg = value; }
+    }
+
   }
 }
