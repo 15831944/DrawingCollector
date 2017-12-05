@@ -102,6 +102,7 @@ namespace ProtoDrawingCollector.csproj {
       this.radioButton1.TabStop = true;
       this.radioButton1.Text = "PDF Packet";
       this.radioButton1.UseVisualStyleBackColor = true;
+      this.radioButton1.Visible = false;
       this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
       // 
       // radioButton2
@@ -114,6 +115,7 @@ namespace ProtoDrawingCollector.csproj {
       this.radioButton2.TabStop = true;
       this.radioButton2.Text = "DXFs";
       this.radioButton2.UseVisualStyleBackColor = true;
+      this.radioButton2.Visible = false;
       this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
       // 
       // textBox1
@@ -124,6 +126,7 @@ namespace ProtoDrawingCollector.csproj {
       this.textBox1.Name = "textBox1";
       this.textBox1.Size = new System.Drawing.Size(244, 22);
       this.textBox1.TabIndex = 8;
+      this.textBox1.Visible = false;
       this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseDoubleClick);
       // 
       // numericUpDown1
@@ -133,6 +136,7 @@ namespace ProtoDrawingCollector.csproj {
       this.numericUpDown1.Name = "numericUpDown1";
       this.numericUpDown1.Size = new System.Drawing.Size(39, 22);
       this.numericUpDown1.TabIndex = 9;
+      this.numericUpDown1.Visible = false;
       // 
       // label1
       // 
@@ -143,6 +147,7 @@ namespace ProtoDrawingCollector.csproj {
       this.label1.Size = new System.Drawing.Size(102, 13);
       this.label1.TabIndex = 10;
       this.label1.Text = "Compression Level";
+      this.label1.Visible = false;
       // 
       // Message
       // 
