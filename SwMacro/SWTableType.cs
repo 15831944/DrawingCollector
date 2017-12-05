@@ -99,7 +99,7 @@ class SWTableType {
   public FileInfo get_path(string doc) {
     if (PathList != null) {
       foreach (FileInfo fi in PathList) {
-        if (fi.Name.ToUpper().Contains(doc.ToUpper())) {
+        if (fi.Name.ToUpper().Contains(doc.Trim().ToUpper())) {
           return fi;
         }
       }
