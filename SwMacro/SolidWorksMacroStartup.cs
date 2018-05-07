@@ -78,7 +78,7 @@ namespace ProtoDrawingCollector.csproj {
         throw ex;
       }
 
-      //Main();
+      Main();
 
 
     }
