@@ -90,6 +90,13 @@ public class PDFCollector {
           if (t.Length < 1) continue;
           FileInfo dwg = new FileInfo(t.Replace(ext, ".SLDDRW"));
           FileInfo fi = new FileInfo(t.Replace(ext, targetExt));
+          if (!dwg.Exists) {
+            string filename = Path.GetFileNameWithoutExtension(t);
+            FileInfo maybe_md_= new FileInfo(t.Replace(filename, part));
+            if (maybe_md_.Exists) {
+              dwg = new FileInfo(maybe_md_.FullName.Replace(ext, ".SLDDRW"));
+            }
+          }
           if (dwg.Exists && !fi.Exists) {
             create_dwg(dwg);
             fi = new FileInfo(fi.FullName);
