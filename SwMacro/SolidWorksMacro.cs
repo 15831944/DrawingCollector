@@ -9,21 +9,23 @@ namespace ProtoDrawingCollector.csproj {
   public partial class SolidWorksMacro {
     public void Main() {
       if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
-        Redbrick_Addin.CutlistData cd = new Redbrick_Addin.CutlistData(Properties.Settings.Default.ConnectionString);
-        try {
-          cd.IncrementOdometer(Redbrick_Addin.CutlistData.Functions.DrawingCollector);
-        } catch (Exception) {
-          //ignore
+        using (Redbrick_Addin.CutlistData cd = new Redbrick_Addin.CutlistData(Properties.Settings.Default.ConnectionString)) {
+          try {
+            cd.IncrementOdometer(Redbrick_Addin.CutlistData.Functions.DrawingCollector);
+          } catch (Exception) {
+            //ignore
+          }
         }
       }
       di = Path.GetDirectoryName((swApp.ActiveDoc as ModelDoc2).GetPathName());
       DrawingData d = new DrawingData(di);
       pc = new PDFCollector(swApp, Properties.Settings.Default.TableHashes, d);
-      m = new Message();
-      Message.click_go += new Message.click_EventHandler(Message_click_go);
-      Message.click_close += new Message.close_EventHandler(Message_click_close);
-      DrawingDoc p = (DrawingDoc)swApp.ActiveDoc;
-      m.ShowDialog();
+      using (m = new Message()) {
+        Message.click_go += new Message.click_EventHandler(Message_click_go);
+        Message.click_close += new Message.close_EventHandler(Message_click_close);
+        DrawingDoc p = (DrawingDoc)swApp.ActiveDoc;
+        m.ShowDialog();
+      }
       //System.Runtime.InteropServices.Marshal.ReleaseComObject(p);
       //System.Runtime.InteropServices.Marshal.ReleaseComObject(swApp);
     }
