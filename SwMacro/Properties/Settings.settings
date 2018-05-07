@@ -14,7 +14,8 @@
   &lt;string&gt;B2-01-6F-32-BD-A0-D4-35-11-4D-40-09-16-58-0B-2F&lt;/string&gt;
   &lt;string&gt;A5-E1-C2-0B-16-EB-35-E9-62-D3-1D-18-94-F0-81-80&lt;/string&gt;
   &lt;string&gt;C6-D1-82-65-2B-53-7C-4A-D6-74-BF-33-69-75-A1-3E&lt;/string&gt;
-  &lt;string&gt;E-78-D8-47-DC-44-3C-93-6E-DB-E8-24-C3-63-22-FD&lt;/string&gt;
+  &lt;string&gt;7D-37-E7-57-82-09-28-71-D3-0B-94-7D-AC-44-D2-0F&lt;/string&gt;
+  &lt;string&gt;70-02-2B-39-04-EA-3A-5E-9D-24-CD-E8-3B-36-F3-B7&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="TargetPath" Type="System.String" Scope="User">
