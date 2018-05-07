@@ -20,16 +20,13 @@ namespace ProtoDrawingCollector.csproj {
       DrawingData d = new DrawingData(di);
       pc = new PDFCollector(swApp, Properties.Settings.Default.TableHashes, d);
       m = new Message();
-      m.Show();
-
       Message.click_go += new Message.click_EventHandler(Message_click_go);
-
+      Message.click_close += new Message.close_EventHandler(Message_click_close);
       DrawingDoc p = (DrawingDoc)swApp.ActiveDoc;
-
-      //p.UserSelectionPostNotify += p_UserSelectionPostNotify;
-      //selected_bom += m.AppendLineEvent;
+      m.ShowDialog();
+      //System.Runtime.InteropServices.Marshal.ReleaseComObject(p);
+      //System.Runtime.InteropServices.Marshal.ReleaseComObject(swApp);
     }
-
 
     int p_UserSelectionPostNotify() {
       ModelDoc2 md = (swApp.ActiveDoc as ModelDoc2);
@@ -39,6 +36,10 @@ namespace ProtoDrawingCollector.csproj {
         BomFeature bomf = (BomFeature)sMgr.GetSelectedObject6(1, -1);
         OnSelectedBOM(new AppendEventArgs(string.Format(@"Selected {0}.", bomf.Name)));
       }
+      System.Runtime.InteropServices.Marshal.ReleaseComObject(sMgr);
+      System.Runtime.InteropServices.Marshal.ReleaseComObject(p);
+      System.Runtime.InteropServices.Marshal.ReleaseComObject(md);
+      System.Runtime.InteropServices.Marshal.ReleaseComObject(swApp);
       return 0;
     }
 
@@ -49,6 +50,15 @@ namespace ProtoDrawingCollector.csproj {
       if (handler != null) {
         handler(new object(), e);
       }
+    }
+
+    public void Message_click_close(object sender, CloseEventArgs e) {
+      int gen_ = GC.GetGeneration(this);
+      GC.Collect(gen_, GCCollectionMode.Forced);
+      try {
+        SwMacroCleanup();
+      } catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+      return;
     }
 
     public void Message_click_go(object sender, GoEventArgs e) {
@@ -136,7 +146,8 @@ namespace ProtoDrawingCollector.csproj {
 
     private void GCandOpen() {
       System.Diagnostics.Process.Start(path);
-      System.GC.Collect(0, GCCollectionMode.Forced);
+      int gen_ = GC.GetGeneration(this);
+      System.GC.Collect(gen_, GCCollectionMode.Forced);
     }
 
     private Message m;

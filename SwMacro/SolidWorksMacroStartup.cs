@@ -41,7 +41,7 @@ namespace ProtoDrawingCollector.csproj {
           } catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
         }
 
-        return;
+        //return;
       }
 
 
@@ -78,7 +78,7 @@ namespace ProtoDrawingCollector.csproj {
         throw ex;
       }
 
-      Main();
+      //Main();
 
 
     }

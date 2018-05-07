@@ -19,6 +19,7 @@ class SWTableType {
   private string _part_column = "PART NUMBER";
   private bool initialated = false;
   private List<FileInfo> path_list = new List<FileInfo>();
+  private Dictionary<string, FileInfo> path_dict = new Dictionary<string, FileInfo>();
   public IBomFeature found_bom = null;
 
   public SWTableType(ModelDoc2 md, string tablehash) {
@@ -85,11 +86,14 @@ class SWTableType {
     BomTableAnnotation bta = (BomTableAnnotation)bomtaa[0];
     int prtcol = get_column_by_name(_part_column);
     for (int i = 0; i < _row_count; i++) {
-      _prts.Add(swTable.get_DisplayedText(i, prtcol));
+      string prt_ = swTable.get_DisplayedText(i, prtcol);
+      _prts.Add(prt_);
       string[] pathnames = (string[])bta.GetModelPathNames(i, out itno, out ptno);
       if (pathnames != null) {
         foreach (string pathname in pathnames) {
-          path_list.Add(new FileInfo(pathname));
+          FileInfo fi_ = new FileInfo(pathname);
+          path_list.Add(fi_);
+          path_dict.Add(prt_.ToUpper(), fi_);
         }
       }
     }
@@ -103,6 +107,13 @@ class SWTableType {
           return fi;
         }
       }
+    }
+    return null;
+  }
+
+  public FileInfo get_path2(string doc) {
+    if (path_dict != null) {
+      return path_dict[doc.ToUpper()];
     }
     return null;
   }

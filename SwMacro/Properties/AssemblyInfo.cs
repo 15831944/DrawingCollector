@@ -10,9 +10,9 @@ using System.Resources;
 [assembly: AssemblyTitle("Drawing Collector")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Amstore Corp")]
+[assembly: AssemblyCompany("Amstore Corp.")]
 [assembly: AssemblyProduct("Drawing Collector")]
-[assembly: AssemblyCopyright("Copyright @ Amstore 2016")]
+[assembly: AssemblyCopyright("Copyright @ Amstore 2016-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 //

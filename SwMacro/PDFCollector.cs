@@ -49,7 +49,11 @@ public class PDFCollector {
     ModelDoc2 md = (ModelDoc2)SwApp.ActiveDoc;
     try {
       swt = new SWTableType(md, Hashes);
+    } catch (SWTableTypeException te) {
+      OnAppend(new AppendEventArgs(string.Format("{0} {1}", te.Message, md.GetTitle())));
+      System.Diagnostics.Debug.WriteLine(te.Message);
     } catch (Exception e) {
+      OnAppend(new AppendEventArgs(e.Message));
       System.Diagnostics.Debug.WriteLine(e.Message);
     }
     FileInfo fi = new FileInfo(fullpath);
@@ -71,10 +75,11 @@ public class PDFCollector {
       bool in_lfi;
       bool in_nf;
       for (int i = 1; i < swt.RowCount; i++) {
-        System.Diagnostics.Debug.WriteLine("table: " + swt.GetProperty(i, swt.PartColumn));
+        AppendEventArgs a_ = new AppendEventArgs("item: " + swt.GetProperty(i, swt.PartColumn));
+        OnAppend(a_);
         part = swt.GetProperty(i, swt.PartColumn);
         if (!part.StartsWith("0")) {
-          FileInfo partpath = swt.get_path(part);
+          FileInfo partpath = swt.get_path2(part);
           string t = string.Empty;
           try {
             t = partpath.FullName.ToUpper();
