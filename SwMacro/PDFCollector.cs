@@ -75,7 +75,8 @@ public class PDFCollector {
       bool in_lfi;
       bool in_nf;
       for (int i = 1; i < swt.RowCount; i++) {
-        AppendEventArgs a_ = new AppendEventArgs("item: " + swt.GetProperty(i, swt.PartColumn));
+        string ap_arg_ = string.Format(@"item: {0} ({1})", part, swt.GetProperty(i, @"DESCRIPTION"));
+        AppendEventArgs a_ = new AppendEventArgs(ap_arg_);
         OnAppend(a_);
         part = swt.GetProperty(i, swt.PartColumn);
         if (!part.StartsWith("0")) {
