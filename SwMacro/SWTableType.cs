@@ -93,7 +93,9 @@ class SWTableType {
         foreach (string pathname in pathnames) {
           FileInfo fi_ = new FileInfo(pathname);
           path_list.Add(fi_);
-          path_dict.Add(prt_.ToUpper(), fi_);
+          if (!path_dict.ContainsKey(prt_.ToUpper())) {
+            path_dict.Add(prt_.ToUpper(), fi_);
+          }
         }
       }
     }
@@ -112,8 +114,9 @@ class SWTableType {
   }
 
   public FileInfo get_path2(string doc) {
-    if (path_dict != null) {
-      return path_dict[doc.ToUpper()];
+    string key_ = doc.ToUpper();
+    if (path_dict != null && path_dict.ContainsKey(key_)) {
+      return path_dict[key_];
     }
     return null;
   }
